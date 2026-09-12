@@ -1,0 +1,87 @@
+import React from 'react';
+import { getBerita, createBerita, deleteBerita } from '../../actions/cms';
+import { Plus, Trash2 } from 'lucide-react';
+
+export default async function BeritaAdmin() {
+  const { posts } = await getBerita();
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px', alignItems: 'start' }}>
+      
+      {/* Form (kiri) */}
+      <div style={{ background: 'white', borderRadius: '24px', padding: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: '100px' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1E293B', marginBottom: '24px' }}>Tambah Berita / Artikel Baru</h2>
+        
+        <form action={createBerita} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul</label>
+            <input type="text" name="title" required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Kategori</label>
+              <select name="category" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', background: 'white' }}>
+                <option value="Berita">Berita</option>
+                <option value="Artikel">Artikel</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Penulis</label>
+              <input type="text" name="authorName" required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
+            </div>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Upload Gambar (Maks 10MB)</label>
+            <input type="file" name="imageFile" accept="image/*" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
+            <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '4px' }}>Atau gunakan URL gambar:</p>
+            <input type="url" name="imageUrl" placeholder="https://..." style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', marginTop: '4px' }} />
+          </div>
+          
+          <div>
+            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Isi Singkat (Excerpt)</label>
+            <textarea name="excerpt" rows={5} required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
+          </div>
+          
+          <button type="submit" style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '8px' }}>
+            <Plus size={18} /> Publish
+          </button>
+        </form>
+      </div>
+
+      {/* List (kanan) */}
+      <div style={{ background: 'white', borderRadius: '24px', padding: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1E293B', marginBottom: '24px' }}>Daftar Publikasi</h2>
+        
+        {posts.length === 0 ? (
+          <div style={{ padding: '32px', textAlign: 'center', color: '#64748B', background: '#F8FAFC', borderRadius: '12px' }}>Belum ada publikasi.</div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {posts.map(post => (
+              <div key={post.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', border: '1px solid #E2E8F0', borderRadius: '12px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1E293B', marginBottom: '4px' }}>{post.title}</h3>
+                  <div style={{ fontSize: '0.85rem', color: '#64748B' }}>
+                    <strong>{post.category || 'Berita'}</strong> • {post.authorName || 'Admin'}
+                    <br />
+                    {new Date(post.createdAt).toLocaleDateString('id-ID')} - {new Date(post.createdAt).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}
+                  </div>
+                </div>
+                <form action={async () => {
+                  "use server";
+                  await deleteBerita(post.id);
+                }}>
+                  <button type="submit" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#EF4444', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Trash2 size={18} />
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}
