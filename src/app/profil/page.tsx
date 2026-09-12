@@ -3,10 +3,10 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { Home, ChevronRight, History } from 'lucide-react';
 import Link from 'next/link';
-import { getSiteSettings } from '../actions/cms';
+import { getSettings } from '../actions/cms';
 
 export default async function ProfilPage() {
-  const settings = await getSiteSettings();
+  const settings = await getSettings();
 
   return (
     <div style={{ background: 'var(--bg-color)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
