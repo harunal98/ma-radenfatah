@@ -27,11 +27,11 @@ export default function Navbar() {
           </span>
           {dropdownOpen && (
             <div style={{ position: 'absolute', top: '100%', left: 0, background: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px', minWidth: '200px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', marginTop: '8px' }}>
-              <a href="/#profile" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Profile Sekolah</a>
-              <a href="/#about" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Visi & Misi</a>
-              <a href="/#jurusan" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Jurusan</a>
+              <Link href="/profil" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Profile Sekolah</Link>
+              <Link href="/visi-misi" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Visi & Misi</Link>
+              <Link href="/jurusan" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Jurusan</Link>
               <Link href="/fasilitas" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Fasilitas</Link>
-              <a href="/#program" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Program & Ekstra</a>
+              <Link href="/program" onClick={() => setIsOpen(false)} className="nav-link" style={{ color: 'var(--text-dark)' }}>Program & Ekstra</Link>
             </div>
           )}
         </div>
