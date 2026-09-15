@@ -24,7 +24,7 @@ export default async function VisiMisiPage() {
           <div className="container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ position: 'absolute', right: '15%', top: '50%', width: '12px', height: '12px', borderRadius: '50%', border: '2px solid #94A3B8', opacity: 0.5 }}></div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.875rem', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '1rem', marginBottom: '32px' }}>
               <Link href="/" style={{ color: 'var(--text-light)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                 <Home size={16} />
               </Link>
@@ -47,7 +47,7 @@ export default async function VisiMisiPage() {
                 <div style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--primary)', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Target size={32} />
                 </div>
-                <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary-dark)' }}>Visi</h2>
+                <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary-dark)' }}>Visi</h2>
               </div>
               <p style={{ fontSize: '1.25rem', color: 'var(--text-dark)', lineHeight: 1.8, fontWeight: 600 }}>
                 {settings.profile_visi || `"Terwujudnya Generasi Muslim yang Beriman, Bertaqwa, Berakhlak Mulia, Cerdas, Terampil, dan Mandiri serta Berwawasan Lingkungan."`}
@@ -59,7 +59,7 @@ export default async function VisiMisiPage() {
                 <div style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--accent)', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <ShieldCheck size={32} />
                 </div>
-                <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary-dark)' }}>Misi</h2>
+                <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary-dark)' }}>Misi</h2>
               </div>
               <div style={{ fontSize: '1.125rem', color: 'var(--text-dark)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
                 {settings.profile_misi || `1. Menumbuhkembangkan penghayatan dan pengamalan ajaran Islam Ahlussunnah wal Jamaah.\n2. Melaksanakan pembelajaran dan bimbingan secara efektif sehingga setiap siswa dapat berkembang secara optimal.\n3. Mengembangkan potensi kecerdasan, bakat, dan minat siswa melalui kegiatan ekstrakurikuler.\n4. Menumbuhkan kesadaran dan kepedulian terhadap kelestarian lingkungan alam sekitar.\n5. Membekali lulusan dengan keterampilan abad 21 agar mampu beradaptasi dengan kemajuan teknologi.`}

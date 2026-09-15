@@ -1,9 +1,31 @@
 import React from 'react';
 import { getPengumuman, createPengumuman, deletePengumuman } from '../../actions/cms';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import Link from 'next/link';
 
-export default async function PengumumanAdmin() {
-  const announcements = await getPengumuman();
+export default async function PengumumanAdmin(props: {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParams = props.searchParams ? await props.searchParams : {};
+  const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page, 10) : 1;
+  
+  const { announcements, totalPages } = await getPengumuman({ page, limit: 4 });
+
+  const getPagination = (current: number, total: number) => {
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, current + 2);
+    if (start === 1) end = 5;
+    if (end === total) start = total - 4;
+    
+    const pages: (number | string)[] = [];
+    if (start > 1) pages.push('...');
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (end < total) pages.push('...');
+    return pages;
+  };
+
+  const paginationArray = getPagination(page, totalPages);
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px', alignItems: 'start' }}>
@@ -14,12 +36,16 @@ export default async function PengumumanAdmin() {
         
         <form action={createPengumuman} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul Pengumuman</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul Pengumuman</label>
             <input type="text" name="title" required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Tanggal (Teks)</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Tanggal (Teks)</label>
             <input type="text" name="date" placeholder="Contoh: 15 Juli 2026" required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Isi Pengumuman</label>
+            <textarea name="content" rows={6} required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
           </div>
           
           <button type="submit" style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '8px' }}>
@@ -55,6 +81,57 @@ export default async function PengumumanAdmin() {
                 </form>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Pagination UI */}
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '32px' }}>
+            <Link
+              href={`/admin/pengumuman?page=1`}
+              style={{
+                width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
+                background: 'rgba(16,185,129,0.1)', color: 'var(--primary-dark)',
+                opacity: page === 1 ? 0.5 : 1, pointerEvents: page === 1 ? 'none' : 'auto'
+              }}
+              className="hover-lift"
+            >
+              <ChevronsLeft size={18} />
+            </Link>
+
+            {paginationArray.map((item, idx) => (
+              item === '...' ? (
+                <span key={`ellipsis-${idx}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', color: '#94A3B8', fontWeight: 'bold' }}>...</span>
+              ) : (
+                <Link
+                  key={item}
+                  href={`/admin/pengumuman?page=${item}`}
+                  style={{
+                    width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
+                    background: page === item ? 'var(--primary)' : 'rgba(16,185,129,0.1)',
+                    color: page === item ? 'white' : 'var(--primary-dark)',
+                  }}
+                  className="hover-lift"
+                >
+                  {item}
+                </Link>
+              )
+            ))}
+
+            <Link
+              href={`/admin/pengumuman?page=${totalPages}`}
+              style={{
+                width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
+                background: 'rgba(16,185,129,0.1)', color: 'var(--primary-dark)',
+                opacity: page === totalPages ? 0.5 : 1, pointerEvents: page === totalPages ? 'none' : 'auto'
+              }}
+              className="hover-lift"
+            >
+              <ChevronsRight size={18} />
+            </Link>
           </div>
         )}
       </div>

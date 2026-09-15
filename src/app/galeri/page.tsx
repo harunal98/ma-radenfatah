@@ -23,34 +23,32 @@ export default async function GaleriPage() {
       
       <main style={{ flex: 1 }}>
         {/* Header Section */}
-        <div style={{ 
-          padding: '140px 24px 60px', 
-          background: '#F8FAFC url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-          position: 'relative',
+        <section style={{ 
+          background: 'radial-gradient(circle at 10% 20%, rgba(16,185,129,0.1) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(245,158,11,0.1) 0%, transparent 40%)',
+          padding: '120px 24px 60px',
+          textAlign: 'left',
           borderBottom: '1px solid var(--glass-border)',
+          position: 'relative',
           marginBottom: '60px'
         }}>
-          <div className="container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-            {/* Decorative background circle */}
-            <div style={{ position: 'absolute', right: '15%', top: '50%', width: '12px', height: '12px', borderRadius: '50%', border: '2px solid #94A3B8', opacity: 0.5 }}></div>
-
+          <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
             {/* Breadcrumb */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.875rem', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '8px', color: 'var(--text-light)', fontSize: '1rem', marginBottom: '24px' }}>
               <Link href="/" style={{ color: 'var(--text-light)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-                <Home size={16} />
+                <Home size={16} style={{ marginRight: '4px' }} />
               </Link>
               <ChevronRight size={16} />
               <Link href="#" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>Informasi</Link>
               <ChevronRight size={16} />
-              <span style={{ color: 'var(--primary-dark)', fontWeight: 600 }}>Galeri Kampus</span>
+              <span style={{ color: 'var(--text-dark)', fontWeight: 600 }}>Galeri Kampus</span>
             </div>
 
-            <h1 className="heading-primary" style={{ marginBottom: '16px' }}>Galeri Kampus</h1>
-            <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', margin: 0 }}>Dokumentasi berbagai kegiatan akademik, ekstrakurikuler, dan fasilitas yang ada di MA Raden Fatah Prambanan.</p>
+            <h1 className="heading-primary" style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary-dark)', marginBottom: '16px', letterSpacing: '-0.02em' }}>Galeri Kampus</h1>
+            <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '600px' }}>Dokumentasi berbagai kegiatan akademik, ekstrakurikuler, dan fasilitas yang ada di MA Raden Fatah Prambanan.</p>
           </div>
-        </div>
+        </section>
 
-        <div className="container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px 60px' }}>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 60px' }}>
 
         <GalleryGrid images={galleryImages} />
 

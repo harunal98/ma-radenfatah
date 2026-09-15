@@ -38,7 +38,7 @@ export default function GalleryGrid({ images }: { images: any[] }) {
               className="overlay"
               style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,0.9), rgba(15,23,42,0.2))', opacity: 0, transition: 'opacity 0.3s ease', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '24px' }}
             >
-              <span style={{ background: 'var(--primary)', color: 'white', padding: '4px 10px', borderRadius: '100px', fontSize: '0.75rem', fontWeight: 'bold', alignSelf: 'flex-start', marginBottom: '8px' }}>
+              <span style={{ background: 'var(--primary)', color: 'white', padding: '4px 10px', borderRadius: '100px', fontSize: '1rem', fontWeight: 'bold', alignSelf: 'flex-start', marginBottom: '8px' }}>
                 {img.category}
               </span>
               <h3 style={{ color: 'white', fontSize: '1.25rem', margin: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

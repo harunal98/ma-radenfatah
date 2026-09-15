@@ -44,7 +44,7 @@ export default function JurusanPage() {
           <div className="container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <div style={{ position: 'absolute', right: '15%', top: '50%', width: '12px', height: '12px', borderRadius: '50%', border: '2px solid #94A3B8', opacity: 0.5 }}></div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.875rem', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '1rem', marginBottom: '32px' }}>
               <Link href="/" style={{ color: 'var(--text-light)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                 <Home size={16} />
               </Link>
@@ -67,7 +67,7 @@ export default function JurusanPage() {
                   {j.icon}
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary-dark)', marginBottom: '16px' }}>{j.title}</h2>
+                  <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary-dark)', marginBottom: '16px' }}>{j.title}</h2>
                   <p style={{ fontSize: '1.125rem', color: 'var(--text-dark)', lineHeight: 1.6 }}>{j.desc}</p>
                 </div>
               </div>

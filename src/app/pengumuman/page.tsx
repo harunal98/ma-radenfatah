@@ -5,9 +5,10 @@ import { Home, ChevronRight, ArrowRight, Search, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { getPengumuman } from '../actions/cms';
 
-export default async function PengumumanPage({ searchParams }: { searchParams: { page?: string, query?: string } }) {
-  const page = parseInt(searchParams.page || '1', 10);
-  const query = searchParams.query || '';
+export default async function PengumumanPage(props: { searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const searchParams = props.searchParams ? await props.searchParams : {};
+  const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page, 10) : 1;
+  const query = typeof searchParams.query === 'string' ? searchParams.query : '';
   const limit = 5;
 
   // Fetch from CMS with pagination and filter
@@ -28,6 +29,22 @@ export default async function PengumumanPage({ searchParams }: { searchParams: {
       return { month: 'INFO', day: '--', year: dateStr };
     }
   };
+
+  const getPagination = (current: number, total: number) => {
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, current + 2);
+    if (start === 1) end = 5;
+    if (end === total) start = total - 4;
+    
+    const pages: (number | string)[] = [];
+    if (start > 1) pages.push('...');
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (end < total) pages.push('...');
+    return pages;
+  };
+
+  const paginationArray = getPagination(page, data.totalPages);
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-color)', display: 'flex', flexDirection: 'column' }}>
@@ -50,35 +67,33 @@ export default async function PengumumanPage({ searchParams }: { searchParams: {
       `}</style>
 
       {/* Header Section */}
-      <div style={{ 
-        padding: '140px 24px 60px', 
-        background: '#F8FAFC url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C92AC\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-        position: 'relative',
+      <section style={{ 
+        background: 'radial-gradient(circle at 10% 20%, rgba(16,185,129,0.1) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(245,158,11,0.1) 0%, transparent 40%)',
+        padding: '120px 24px 60px',
+        textAlign: 'left',
         borderBottom: '1px solid var(--glass-border)',
+        position: 'relative',
         marginBottom: '60px'
       }}>
-        <div className="container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          {/* Decorative background circle */}
-          <div style={{ position: 'absolute', right: '15%', top: '50%', width: '12px', height: '12px', borderRadius: '50%', border: '2px solid #94A3B8', opacity: 0.5 }}></div>
-
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* Breadcrumb */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.875rem', marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '8px', color: 'var(--text-light)', fontSize: '1rem', marginBottom: '24px' }}>
             <Link href="/" style={{ color: 'var(--text-light)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-              <Home size={16} />
+              <Home size={16} style={{ marginRight: '4px' }} />
             </Link>
             <ChevronRight size={16} />
             <Link href="#" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>Informasi</Link>
             <ChevronRight size={16} />
-            <span style={{ color: 'var(--primary-dark)', fontWeight: 600 }}>Papan Pengumuman</span>
+            <span style={{ color: 'var(--text-dark)', fontWeight: 600 }}>Papan Pengumuman</span>
           </div>
 
-          <h1 className="heading-primary" style={{ marginBottom: '16px' }}>Papan Pengumuman</h1>
-          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', margin: 0 }}>Informasi resmi dan edaran penting madrasah.</p>
+          <h1 className="heading-primary" style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary-dark)', marginBottom: '16px', letterSpacing: '-0.02em' }}>Papan Pengumuman</h1>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '600px' }}>Informasi resmi dan edaran penting madrasah.</p>
         </div>
-      </div>
+      </section>
 
       {/* Content Section */}
-      <div className="container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '60px 24px', flex: 1 }}>
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 24px', flex: 1 }}>
         
         {/* Filter / Search Bar */}
         <div style={{ marginBottom: '40px' }}>
@@ -117,23 +132,23 @@ export default async function PengumumanPage({ searchParams }: { searchParams: {
                 <div key={item.id} className="glass flex-col-mobile announcement-card" style={{ display: 'flex', padding: 0, overflow: 'hidden', minHeight: '220px' }}>
                   {/* Left Date Block */}
                   <div style={{ background: 'var(--primary)', color: 'white', width: '240px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px', flexShrink: 0 }} className="w-full-mobile p-mobile">
-                    <div style={{ fontSize: '0.875rem', fontWeight: 700, letterSpacing: '0.1em', opacity: 0.9 }}>{dateObj.month}</div>
-                    <div style={{ fontSize: '4rem', fontWeight: 800, lineHeight: 1, margin: '8px 0' }}>{dateObj.day}</div>
+                    <div style={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '0.1em', opacity: 0.9 }}>{dateObj.month}</div>
+                    <div style={{ fontSize: '4rem', fontWeight: 700, lineHeight: 1, margin: '8px 0' }}>{dateObj.day}</div>
                     <div style={{ fontSize: '1.125rem', fontWeight: 600, opacity: 0.9 }}>{dateObj.year}</div>
                   </div>
                   
                   {/* Right Content Block */}
                   <div style={{ padding: '40px', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1 }}>
-                    <div style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--accent)', fontSize: '0.75rem', fontWeight: 800, padding: '6px 16px', borderRadius: '100px', display: 'inline-block', width: 'fit-content', marginBottom: '16px' }}>
+                    <div style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--accent)', fontSize: '1rem', fontWeight: 700, padding: '6px 16px', borderRadius: '100px', display: 'inline-block', width: 'fit-content', marginBottom: '16px' }}>
                       PENGUMUMAN {i === 0 && page === 1 ? 'TERBARU' : 'RESMI'}
                     </div>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-dark)', marginBottom: '16px', lineHeight: 1.3 }}>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--primary-dark)', marginBottom: '16px', lineHeight: 1.3 }}>
                       {item.title}
                     </h2>
-                    <p style={{ color: 'var(--text-dark)', lineHeight: 1.6, marginBottom: '24px', fontSize: '1rem', opacity: 0.8 }}>
-                      Silakan klik baca selengkapnya untuk melihat rincian informasi dan dokumen lampiran dari pengumuman ini.
+                    <p style={{ color: 'var(--text-dark)', lineHeight: 1.6, marginBottom: '24px', fontSize: '1rem', opacity: 0.8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {item.content || 'Silakan klik baca selengkapnya untuk melihat rincian informasi dan dokumen lampiran dari pengumuman ini.'}
                     </p>
-                    <Link href="#" style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.875rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <Link href={`/pengumuman/${item.id}`} style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       Baca Selengkapnya <ArrowRight size={16} />
                     </Link>
                   </div>
@@ -145,23 +160,27 @@ export default async function PengumumanPage({ searchParams }: { searchParams: {
           {/* Pagination */}
           {data.totalPages > 1 && (
             <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '40px' }}>
-              {Array.from({ length: data.totalPages }).map((_, i) => (
-                <Link 
-                  key={i} 
-                  href={`/pengumuman?page=${i + 1}${query ? `&query=${encodeURIComponent(query)}` : ''}`}
-                  className="page-link"
-                  style={{ 
-                    width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                    borderRadius: '12px', fontWeight: 700, textDecoration: 'none',
-                    background: page === i + 1 ? 'var(--primary)' : 'white',
-                    color: page === i + 1 ? 'white' : 'var(--text-dark)',
-                    border: page === i + 1 ? 'none' : '1px solid var(--glass-border)',
-                    boxShadow: page === i + 1 ? '0 4px 12px rgba(16,185,129,0.3)' : 'none',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  {i + 1}
-                </Link>
+              {paginationArray.map((item, idx) => (
+                item === '...' ? (
+                  <span key={`ellipsis-${idx}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', color: 'var(--text-light)', fontWeight: 'bold' }}>...</span>
+                ) : (
+                  <Link 
+                    key={item} 
+                    href={`/pengumuman?page=${item}${query ? `&query=${encodeURIComponent(query)}` : ''}`}
+                    className="page-link"
+                    style={{ 
+                      width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                      borderRadius: '12px', fontWeight: 700, textDecoration: 'none',
+                      background: page === item ? 'var(--primary)' : 'white',
+                      color: page === item ? 'white' : 'var(--text-dark)',
+                      border: page === item ? 'none' : '1px solid var(--glass-border)',
+                      boxShadow: page === item ? '0 4px 12px rgba(16,185,129,0.3)' : 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {item}
+                  </Link>
+                )
               ))}
             </div>
           )}

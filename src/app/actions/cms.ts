@@ -24,10 +24,10 @@ async function uploadFile(file: File | null): Promise<string | null> {
 }
 
 // ================= BERITA =================
-export async function getBerita(options?: { category?: string; page?: number; limit?: number }) {
+export async function getBerita(options?: { category?: string; page?: number; limit?: number; skip?: number }) {
   const limit = options?.limit || undefined;
   const page = options?.page || 1;
-  const skip = limit ? (page - 1) * limit : 0;
+  const skip = options?.skip !== undefined ? options.skip : (limit ? (page - 1) * limit : 0);
 
   const where = options?.category && options.category !== 'Semua' 
     ? { category: options.category } 
@@ -87,6 +87,45 @@ export async function deleteBerita(id: string) {
 }
 
 
+// ================= PRESTASI =================
+export async function createPrestasi(formData: FormData) {
+  const title = formData.get("title")?.toString() || "";
+  const excerpt = formData.get("excerpt")?.toString() || "";
+  const imageFile = formData.get("imageFile") as File | null;
+  const tingkat = formData.get("tingkat")?.toString() || "NASIONAL";
+  const subCategory = formData.get("subCategory")?.toString() || "Siswa";
+  
+  let imageUrl = formData.get("imageUrl")?.toString() || "";
+  if (imageFile && imageFile.size > 0) {
+    const uploaded = await uploadFile(imageFile);
+    if (uploaded) imageUrl = uploaded;
+  }
+
+  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+  await prisma.post.create({
+    data: {
+      title,
+      slug: slug + '-' + Date.now(),
+      content: excerpt,
+      image: imageUrl,
+      authorId: tingkat, // Reusing authorId for tingkat
+      authorName: subCategory, // Reusing authorName for subCategory
+      category: "Prestasi"
+    }
+  });
+
+  revalidatePath("/admin/prestasi");
+  revalidatePath("/prestasi");
+}
+
+export async function deletePrestasi(id: string) {
+  await prisma.post.delete({ where: { id } });
+  revalidatePath("/admin/prestasi");
+  revalidatePath("/prestasi");
+}
+
+
 // ================= PENGUMUMAN =================
 export async function getPengumuman(options?: { query?: string; page?: number; limit?: number }) {
   const limit = options?.limit || undefined;
@@ -112,13 +151,18 @@ export async function getPengumuman(options?: { query?: string; page?: number; l
 export async function createPengumuman(formData: FormData) {
   const title = formData.get("title")?.toString() || "";
   const date = formData.get("date")?.toString() || "";
+  const content = formData.get("content")?.toString() || "";
 
   await prisma.announcement.create({
-    data: { title, date }
+    data: {
+      title,
+      date,
+      content,
+    }
   });
 
   revalidatePath("/admin/pengumuman");
-  revalidatePath("/berita");
+  revalidatePath("/pengumuman");
 }
 
 export async function deletePengumuman(id: string) {
@@ -129,8 +173,20 @@ export async function deletePengumuman(id: string) {
 
 
 // ================= GALERI =================
-export async function getGaleri() {
-  return await prisma.gallery.findMany({ orderBy: { createdAt: 'desc' } });
+export async function getGaleri(options?: { page?: number; limit?: number }) {
+  const limit = options?.limit || undefined;
+  const page = options?.page || 1;
+  const skip = limit ? (page - 1) * limit : 0;
+
+  const photos = await prisma.gallery.findMany({ 
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+    skip: skip
+  });
+
+  const total = await prisma.gallery.count();
+
+  return { photos, total, page, totalPages: limit ? Math.ceil(total / limit) : 1 };
 }
 
 export async function createGaleri(formData: FormData) {
@@ -156,6 +212,51 @@ export async function deleteGaleri(id: string) {
   await prisma.gallery.delete({ where: { id } });
   revalidatePath("/admin/galeri");
   revalidatePath("/galeri");
+}
+
+
+// ================= AGENDA =================
+export async function getAgenda(options?: { page?: number; limit?: number }) {
+  const limit = options?.limit || undefined;
+  const page = options?.page || 1;
+  const skip = limit ? (page - 1) * limit : 0;
+
+  const agendas = await prisma.agenda.findMany({ 
+    orderBy: { date: 'asc' },
+    take: limit,
+    skip: skip
+  });
+
+  const total = await prisma.agenda.count();
+
+  return { agendas, total, page, totalPages: limit ? Math.ceil(total / limit) : 1 };
+}
+
+export async function createAgenda(formData: FormData) {
+  const title = formData.get("title")?.toString() || "";
+  const dateStr = formData.get("date")?.toString() || "";
+  const time = formData.get("time")?.toString() || "";
+  const location = formData.get("location")?.toString() || "";
+  const excerpt = formData.get("excerpt")?.toString() || "";
+
+  await prisma.agenda.create({
+    data: {
+      title,
+      date: new Date(dateStr),
+      time,
+      location,
+      excerpt
+    }
+  });
+
+  revalidatePath("/admin/agenda");
+  revalidatePath("/agenda");
+}
+
+export async function deleteAgenda(id: string) {
+  await prisma.agenda.delete({ where: { id } });
+  revalidatePath("/admin/agenda");
+  revalidatePath("/agenda");
 }
 
 

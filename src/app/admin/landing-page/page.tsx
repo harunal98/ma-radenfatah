@@ -15,11 +15,11 @@ export default async function LandingPageSettings() {
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: '16px', borderBottom: '1px solid #F1F5F9', paddingBottom: '8px' }}>Bagian Hero</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul Hero (Bisa pakai HTML)</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul Hero (Bisa pakai HTML)</label>
               <input type="text" name="hero_title" defaultValue={settings.hero_title} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Sub-judul Hero</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Sub-judul Hero</label>
               <textarea name="hero_subtitle" defaultValue={settings.hero_subtitle} rows={3} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
             </div>
           </div>
@@ -29,15 +29,15 @@ export default async function LandingPageSettings() {
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: '16px', borderBottom: '1px solid #F1F5F9', paddingBottom: '8px' }}>Sejarah & Visi Misi</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Sejarah Sekolah</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Sejarah Sekolah</label>
               <textarea name="profile_history" defaultValue={settings.profile_history} rows={5} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Visi Sekolah</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Visi Sekolah</label>
               <textarea name="visi_text" defaultValue={settings.visi_text} rows={3} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Misi Sekolah (Pisahkan dengan baris baru)</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Misi Sekolah (Pisahkan dengan baris baru)</label>
               <textarea name="misi_text" defaultValue={settings.misi_text} rows={5} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
             </div>
           </div>
@@ -47,11 +47,11 @@ export default async function LandingPageSettings() {
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--primary-dark)', marginBottom: '16px', borderBottom: '1px solid #F1F5F9', paddingBottom: '8px' }}>Sambutan Kepala Sekolah</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Nama Kepala Sekolah</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Nama Kepala Sekolah</label>
               <input type="text" name="kepsek_name" defaultValue={settings.kepsek_name} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Isi Sambutan</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Isi Sambutan</label>
               <textarea name="kepsek_message" defaultValue={settings.kepsek_message} rows={5} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
             </div>
           </div>

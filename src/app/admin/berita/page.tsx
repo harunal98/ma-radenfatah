@@ -1,9 +1,31 @@
 import React from 'react';
 import { getBerita, createBerita, deleteBerita } from '../../actions/cms';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import Link from 'next/link';
 
-export default async function BeritaAdmin() {
-  const { posts } = await getBerita();
+export default async function BeritaAdmin(props: {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParams = props.searchParams ? await props.searchParams : {};
+  const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page, 10) : 1;
+  
+  const { posts, totalPages } = await getBerita({ page, limit: 4 });
+
+  const getPagination = (current: number, total: number) => {
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, current + 2);
+    if (start === 1) end = 5;
+    if (end === total) start = total - 4;
+    
+    const pages: (number | string)[] = [];
+    if (start > 1) pages.push('...');
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (end < total) pages.push('...');
+    return pages;
+  };
+
+  const paginationArray = getPagination(page, totalPages);
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px', alignItems: 'start' }}>
@@ -14,33 +36,33 @@ export default async function BeritaAdmin() {
         
         <form action={createBerita} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul</label>
             <input type="text" name="title" required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Kategori</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Kategori</label>
               <select name="category" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', background: 'white' }}>
                 <option value="Berita">Berita</option>
                 <option value="Artikel">Artikel</option>
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Penulis</label>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Penulis</label>
               <input type="text" name="authorName" required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
             </div>
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Upload Gambar (Maks 10MB)</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Upload Gambar (Maks 10MB)</label>
             <input type="file" name="imageFile" accept="image/*" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
-            <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '4px' }}>Atau gunakan URL gambar:</p>
+            <p style={{ fontSize: '1rem', color: '#64748B', marginTop: '4px' }}>Atau gunakan URL gambar:</p>
             <input type="url" name="imageUrl" placeholder="https://..." style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', marginTop: '4px' }} />
           </div>
           
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Isi Singkat (Excerpt)</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Isi Singkat (Excerpt)</label>
             <textarea name="excerpt" rows={5} required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
           </div>
           
@@ -78,6 +100,57 @@ export default async function BeritaAdmin() {
                 </form>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Pagination UI */}
+        {totalPages > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '32px' }}>
+            <Link
+              href={`/admin/berita?page=1`}
+              style={{
+                width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
+                background: 'rgba(16,185,129,0.1)', color: 'var(--primary-dark)',
+                opacity: page === 1 ? 0.5 : 1, pointerEvents: page === 1 ? 'none' : 'auto'
+              }}
+              className="hover-lift"
+            >
+              <ChevronsLeft size={18} />
+            </Link>
+
+            {paginationArray.map((item, idx) => (
+              item === '...' ? (
+                <span key={`ellipsis-${idx}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', color: '#94A3B8', fontWeight: 'bold' }}>...</span>
+              ) : (
+                <Link
+                  key={item}
+                  href={`/admin/berita?page=${item}`}
+                  style={{
+                    width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
+                    background: page === item ? 'var(--primary)' : 'rgba(16,185,129,0.1)',
+                    color: page === item ? 'white' : 'var(--primary-dark)',
+                  }}
+                  className="hover-lift"
+                >
+                  {item}
+                </Link>
+              )
+            ))}
+
+            <Link
+              href={`/admin/berita?page=${totalPages}`}
+              style={{
+                width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
+                background: 'rgba(16,185,129,0.1)', color: 'var(--primary-dark)',
+                opacity: page === totalPages ? 0.5 : 1, pointerEvents: page === totalPages ? 'none' : 'auto'
+              }}
+              className="hover-lift"
+            >
+              <ChevronsRight size={18} />
+            </Link>
           </div>
         )}
       </div>

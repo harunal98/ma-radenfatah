@@ -40,7 +40,7 @@ export default function LoginPage() {
           <div style={{ background: 'var(--primary)', width: '64px', height: '64px', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white', margin: '0 auto 24px', boxShadow: '0 10px 25px rgba(16, 185, 129, 0.4)' }}>
             <BookOpen size={32} />
           </div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary-dark)', marginBottom: '8px' }}>Portal Admin</h1>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary-dark)', marginBottom: '8px' }}>Portal Admin</h1>
           <p style={{ color: 'var(--text-light)', fontSize: '0.95rem' }}>Silakan masuk untuk mengelola konten MA Raden Fatah.</p>
         </div>
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
         <form action={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '8px' }}>Alamat Email</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '8px' }}>Alamat Email</label>
             <div style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', top: '50%', left: '16px', transform: 'translateY(-50%)', color: 'var(--text-light)' }}>
                 <Mail size={20} />
@@ -71,7 +71,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '8px' }}>Kata Sandi</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '8px' }}>Kata Sandi</label>
             <div style={{ position: 'relative' }}>
               <div style={{ position: 'absolute', top: '50%', left: '16px', transform: 'translateY(-50%)', color: 'var(--text-light)' }}>
                 <Key size={20} />

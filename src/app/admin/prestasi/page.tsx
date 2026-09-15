@@ -1,15 +1,15 @@
 import React from 'react';
-import { getGaleri, createGaleri, deleteGaleri } from '../../actions/cms';
+import { getBerita, createPrestasi, deletePrestasi } from '../../actions/cms';
 import { Plus, Trash2, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import Link from 'next/link';
 
-export default async function GaleriAdmin(props: {
+export default async function PrestasiAdmin(props: {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParams = props.searchParams ? await props.searchParams : {};
   const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page, 10) : 1;
   
-  const { photos: images, totalPages } = await getGaleri({ page, limit: 4 });
+  const { posts, totalPages } = await getBerita({ category: 'Prestasi', page, limit: 4 });
 
   const getPagination = (current: number, total: number) => {
     if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
@@ -30,14 +30,34 @@ export default async function GaleriAdmin(props: {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '24px', alignItems: 'start' }}>
       
-      {/* Form (Kiri) */}
+      {/* Form (kiri) */}
       <div style={{ background: 'white', borderRadius: '24px', padding: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)', position: 'sticky', top: '100px' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1E293B', marginBottom: '24px' }}>Tambah Foto</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1E293B', marginBottom: '24px' }}>Tambah Prestasi Baru</h2>
         
-        <form action={createGaleri} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form action={createPrestasi} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul Foto</label>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Judul Prestasi</label>
             <input type="text" name="title" required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none' }} />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Tingkat</label>
+              <select name="tingkat" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', background: 'white' }}>
+                <option value="KABUPATEN">KABUPATEN</option>
+                <option value="PROVINSI">PROVINSI</option>
+                <option value="NASIONAL">NASIONAL</option>
+                <option value="INTERNASIONAL">INTERNASIONAL</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Sub Kategori (Penerima)</label>
+              <select name="subCategory" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', background: 'white' }}>
+                <option value="Siswa">Siswa</option>
+                <option value="Guru & Staf">Guru & Staf</option>
+                <option value="Institusi">Institusi</option>
+              </select>
+            </div>
           </div>
 
           <div>
@@ -46,48 +66,44 @@ export default async function GaleriAdmin(props: {
             <p style={{ fontSize: '1rem', color: '#64748B', marginTop: '4px' }}>Atau gunakan URL gambar:</p>
             <input type="url" name="imageUrl" placeholder="https://..." style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', marginTop: '4px' }} />
           </div>
-
+          
           <div>
-            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Kategori</label>
-            <select name="category" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', background: 'white' }}>
-              <option value="Kegiatan">Kegiatan</option>
-              <option value="Fasilitas">Fasilitas</option>
-              <option value="Prestasi">Prestasi</option>
-              <option value="Umum">Umum</option>
-            </select>
+            <label style={{ display: 'block', fontSize: '1rem', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Deskripsi Singkat</label>
+            <textarea name="excerpt" rows={5} required style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #E2E8F0', outline: 'none', resize: 'vertical' }}></textarea>
           </div>
           
           <button type="submit" style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '8px' }}>
-            <Plus size={18} /> Upload Foto
+            <Plus size={18} /> Publish Prestasi
           </button>
         </form>
       </div>
 
-      {/* List (Kanan) */}
+      {/* List (kanan) */}
       <div style={{ background: 'white', borderRadius: '24px', padding: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1E293B', marginBottom: '24px' }}>Daftar Foto Galeri</h2>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1E293B', marginBottom: '24px' }}>Daftar Prestasi</h2>
         
-        {images.length === 0 ? (
-          <div style={{ padding: '32px', textAlign: 'center', color: '#64748B', background: '#F8FAFC', borderRadius: '12px' }}>Belum ada foto.</div>
+        {posts.length === 0 ? (
+          <div style={{ padding: '32px', textAlign: 'center', color: '#64748B', background: '#F8FAFC', borderRadius: '12px' }}>Belum ada data prestasi.</div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '16px' }}>
-            {images.map(img => (
-              <div key={img.id} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
-                <div style={{ width: '100%', height: '120px', backgroundImage: `url(${img.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-                <div style={{ padding: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ flex: 1, overflow: 'hidden' }}>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#1E293B', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{img.title}</div>
-                    <div style={{ fontSize: '1rem', color: '#64748B' }}>{img.category}</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {posts.map(post => (
+              <div key={post.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', border: '1px solid #E2E8F0', borderRadius: '12px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#1E293B', marginBottom: '4px' }}>{post.title}</h3>
+                  <div style={{ fontSize: '0.85rem', color: '#64748B', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <span style={{ background: 'var(--accent)', color: 'white', padding: '2px 8px', borderRadius: '100px', fontSize: '0.7rem', fontWeight: 'bold' }}>{post.authorId || 'NASIONAL'}</span>
+                    <span style={{ background: 'var(--primary)', color: 'white', padding: '2px 8px', borderRadius: '100px', fontSize: '0.7rem', fontWeight: 'bold' }}>{post.authorName || 'Siswa'}</span>
+                    <span>{new Date(post.createdAt).toLocaleDateString('id-ID')}</span>
                   </div>
-                  <form action={async () => {
-                    "use server";
-                    await deleteGaleri(img.id);
-                  }}>
-                    <button type="submit" style={{ background: 'transparent', color: '#EF4444', border: 'none', cursor: 'pointer', padding: '4px' }}>
-                      <Trash2 size={16} />
-                    </button>
-                  </form>
                 </div>
+                <form action={async () => {
+                  "use server";
+                  await deletePrestasi(post.id);
+                }}>
+                  <button type="submit" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#EF4444', border: 'none', padding: '8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Trash2 size={18} />
+                  </button>
+                </form>
               </div>
             ))}
           </div>
@@ -97,7 +113,7 @@ export default async function GaleriAdmin(props: {
         {totalPages > 1 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '32px' }}>
             <Link
-              href={`/admin/galeri?page=1`}
+              href={`/admin/prestasi?page=1`}
               style={{
                 width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
@@ -115,7 +131,7 @@ export default async function GaleriAdmin(props: {
               ) : (
                 <Link
                   key={item}
-                  href={`/admin/galeri?page=${item}`}
+                  href={`/admin/prestasi?page=${item}`}
                   style={{
                     width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',
@@ -130,7 +146,7 @@ export default async function GaleriAdmin(props: {
             ))}
 
             <Link
-              href={`/admin/galeri?page=${totalPages}`}
+              href={`/admin/prestasi?page=${totalPages}`}
               style={{
                 width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold',

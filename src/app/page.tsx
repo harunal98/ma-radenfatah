@@ -5,14 +5,18 @@ import {
   BookOpen, GraduationCap, Trophy, Users, PlayCircle, ArrowRight,
   Library, Monitor, MapPin, History, Star, Building, Heart,
   CheckCircle, Phone, Mail, Download, Map,
-  Target, Award, Globe, Link as LinkIcon, Quote, Camera, MonitorPlay
+  Target, Award, Globe, Link as LinkIcon, Quote, Camera, MonitorPlay,
+  Calendar, User
 } from 'lucide-react';
-import { getSettings } from './actions/cms';
+import { getSettings, getBerita } from './actions/cms';
 import Link from 'next/link';
 import HeroCarousel from '../components/HeroCarousel';
+import TestimoniCarousel from '../components/TestimoniCarousel';
 
 export default async function Home() {
   const settings = await getSettings();
+  const { posts: latestPosts } = await getBerita({ limit: 3 });
+  const { posts: latestPrestasi } = await getBerita({ category: 'Prestasi', limit: 3 });
 
   const heroImg = '/assets/hero-img.jpg';
 
@@ -31,9 +35,9 @@ export default async function Home() {
           <a href="https://nuist.id/ppdb/MA%20Raden%20Fatah" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '1.125rem', textDecoration: 'none', width: '100%', maxWidth: '300px', margin: '0 auto' }}>
             Daftar Sekarang
           </a>
-          <button className="btn btn-outline" style={{ padding: '16px 32px', fontSize: '1.125rem', border: '2px solid var(--accent)', color: 'var(--accent-dark)', width: '100%', maxWidth: '300px', margin: '0 auto' }}>
-            Cek Status
-          </button>
+          <a href="/#kontak" className="btn btn-outline-accent" style={{ padding: '16px 32px', fontSize: '1.125rem', width: '100%', maxWidth: '300px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', textDecoration: 'none' }}>
+            Hubungi Kami <ArrowRight size={20} />
+          </a>
         </div>
       </div>
 
@@ -46,84 +50,21 @@ export default async function Home() {
 
   const SectionTitle = ({ icon, title, subtitle }: any) => (
     <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-      <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+      <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
         {icon} {title}
       </h2>
       {subtitle && <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', marginTop: '12px' }}>{subtitle}</p>}
     </div>
   );
 
-  const Profile = () => (
-    <section id="profile" className="container" style={{ padding: '80px 24px' }}>
-      <SectionTitle icon={<History color="var(--accent)" size={40} />} title="Profile Sekolah" subtitle="Mengenal lebih dalam tentang sejarah dan profil MA Raden Fatah" />
-
-      <div className="flex-col-mobile" style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
-        <div style={{ flex: '1 1 500px' }}>
-          <div className="glass p-mobile" style={{ padding: '40px', borderLeft: '4px solid var(--accent)', height: '100%' }}>
-            <h3 style={{ color: 'var(--accent-dark)', marginBottom: '16px', fontSize: '1.5rem' }}>Perjalanan Sejarah</h3>
-            {settings.profile_history?.split('\n\n').map((p, i) => (
-              <p key={i} style={{ color: 'var(--text-dark)', lineHeight: 1.8, marginBottom: '16px' }} dangerouslySetInnerHTML={{ __html: p }}></p>
-            ))}
-          </div>
-        </div>
-        <div style={{ flex: '1 1 300px' }}>
-          <div className="glass-accent p-mobile" style={{ padding: '40px', height: '100%' }}>
-            <h4 style={{ fontSize: '1.25rem', marginBottom: '24px', color: 'var(--primary-dark)' }}>Informasi Sekolah</h4>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>Akreditasi</div>
-              <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>B</div>
-            </div>
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>Nilai-Nilai</div>
-              <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>Iman Tangguh Mulia</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>Tahun Berdiri</div>
-              <div style={{ fontSize: '1.125rem', fontWeight: 700 }}>1978</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-
-  const VisiMisi = () => (
-    <section id="about" className="container" style={{ padding: '80px 24px', background: 'linear-gradient(to right, rgba(16,185,129,0.05), transparent)' }}>
-      <SectionTitle icon={<Target color="var(--primary)" size={40} />} title="Visi & Misi" subtitle="Tujuan dan arah perjuangan MA Raden Fatah" />
-      <div className="flex-col-mobile" style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
-        <div className="glass" style={{ flex: '1 1 400px', padding: '40px', borderRadius: '24px' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Target color="var(--accent)" size={28} /> Visi
-          </h2>
-          <p style={{ fontSize: '1.125rem', color: 'var(--text-dark)', lineHeight: 1.8, fontStyle: 'italic' }}>
-            "{settings.visi_text}"
-          </p>
-        </div>
-        <div className="glass" style={{ flex: '1 1 400px', padding: '40px', borderRadius: '24px' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <CheckCircle color="var(--accent)" size={28} /> Misi
-          </h2>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {settings.misi_text?.split('\n').map((m, i) => m && (
-              <li key={i} style={{ display: 'flex', gap: '16px', marginBottom: '16px', alignItems: 'flex-start' }}>
-                <CheckCircle color="var(--accent)" size={24} style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span style={{ fontSize: '1.125rem', color: 'var(--text-dark)', lineHeight: 1.6 }}>{m}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-
   const KepalaSekolah = () => (
     <section id="kepala-sekolah" className="container" style={{ padding: '80px 24px' }}>
-      <div className="flex-col-mobile" style={{ background: 'white', display: 'flex', gap: '48px', alignItems: 'flex-start', padding: '48px', borderRadius: '32px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)', maxWidth: '1100px', margin: '0 auto' }}>
-        <div style={{ width: '280px', height: '360px', borderRadius: '24px', background: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-          <img src="/assets/kepsek.jpeg" alt="Kepala Sekolah" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      <div className="flex-col-mobile" style={{ background: 'white', display: 'flex', gap: '48px', alignItems: 'flex-start', padding: 'clamp(24px, 4vw, 48px)', borderRadius: '32px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)', maxWidth: '1100px', margin: '0 auto' }}>
+        <div className="w-full-mobile" style={{ width: '280px', aspectRatio: '3/4', borderRadius: '24px', background: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+          <img src="/assets/kepsek.jpeg" alt="Kepala Sekolah" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
         </div>
         <div style={{ flex: 1, padding: '16px 0' }}>
-          <h3 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '8px' }}>{settings.kepsek_name || "Yazid Shofwan, S.Pd.,M.Sc."}</h3>
+          <h3 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '8px' }}>{settings.kepsek_name || "Yazid Shofwan, S.Pd.,M.Sc."}</h3>
           <p style={{ color: 'var(--accent)', fontWeight: 700, fontSize: '1.125rem', marginBottom: '32px' }}>Kepala Madrasah</p>
           {settings.kepsek_message?.split('\n\n').map((m, i) => (
             <p key={i} style={{ fontSize: '1.125rem', color: 'var(--text-dark)', lineHeight: 1.8, fontStyle: 'italic', marginBottom: '24px' }}>"{m}"</p>
@@ -133,97 +74,6 @@ export default async function Home() {
     </section>
   );
 
-  // Remaining static sections
-  const Jurusan = () => (
-    <section id="jurusan" className="container" style={{ padding: '80px 24px' }}>
-      <SectionTitle icon={<GraduationCap color="var(--primary)" size={40} />} title="Program Jurusan" subtitle="Pilih jalur pendidikan sesuai minat dan bakat Anda" />
-      <div className="glass" style={{ padding: '40px', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-        <div style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--primary)', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-          <BookOpen size={32} />
-        </div>
-        <h3 style={{ fontSize: '1.5rem', marginBottom: '16px', color: 'var(--primary-dark)' }}>Kurikulum Merdeka</h3>
-        <p style={{ color: 'var(--text-light)', lineHeight: 1.6 }}>
-          Pembelajaran Mendalam dan Kurikulum Berbasis Cinta yang membentuk karakter siswa berakhlak mulia dan berwawasan luas.
-        </p>
-      </div>
-    </section>
-  );
-
-  const Fasilitas = () => {
-    const fasilitas = [
-      { title: 'Ruang Kelas', icon: <Building size={32} /> },
-      { title: 'Lab Komputer', icon: <Monitor size={32} /> },
-      { title: 'Aula', icon: <Users size={32} /> },
-      { title: 'Lapangan', icon: <Map size={32} /> }
-    ];
-
-    return (
-      <section id="fasilitas" className="container" style={{ padding: '80px 24px' }}>
-        <SectionTitle icon={<Building color="var(--accent)" size={40} />} title="Fasilitas Sekolah" subtitle="Sarana dan prasarana pendukung kegiatan belajar mengajar" />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
-          {fasilitas.map((f, i) => (
-            <div key={i} className="glass" style={{ padding: '32px', textAlign: 'center', transition: 'transform 0.3s ease' }}>
-              <div style={{ background: 'var(--primary-light)', color: 'white', width: '80px', height: '80px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                {f.icon}
-              </div>
-              <h4 style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{f.title}</h4>
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  };
-
-  const ProgramEkstra = () => {
-    const programs = [
-      { title: 'Pramuka', type: 'Ekstrakurikuler' },
-      { title: 'Badminton', type: 'Olahraga' },
-      { title: 'Hadroh', type: 'Kesenian Islami' },
-      { title: 'Pagar Nusa', type: 'Bela Diri' }
-    ];
-
-    return (
-      <section id="program" className="container" style={{ padding: '80px 24px' }}>
-        <SectionTitle icon={<Star color="var(--primary)" size={40} />} title="Program & Ekstra" />
-        <div className="flex-col-mobile" style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-          <div className="glass-dark p-mobile" style={{ padding: '40px', flex: '1 1 300px' }}>
-            <div style={{ background: 'var(--accent)', color: 'white', width: '48px', height: '48px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
-              <Trophy size={24} />
-            </div>
-            <h3 style={{ fontSize: '1.5rem', color: 'white', marginBottom: '16px' }}>Program Unggulan</h3>
-            <p style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.6 }}>
-              Juara Lomba Tingkat Kabupaten merupakan salah satu keunggulan sekolah kami dalam membina siswa berprestasi di berbagai bidang.
-            </p>
-          </div>
-          <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', flex: '1 1 300px' }}>
-            {programs.map((p, i) => (
-              <div key={i} className="glass" style={{ padding: '24px' }}>
-                <div style={{ fontSize: '0.875rem', color: 'var(--primary)', fontWeight: 600, marginBottom: '8px' }}>{p.type}</div>
-                <h4 style={{ fontSize: '1.125rem', fontWeight: 700 }}>{p.title}</h4>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  };
-
-  const Prestasi = () => (
-    <section id="prestasi" className="container" style={{ padding: '80px 24px' }}>
-      <SectionTitle icon={<Trophy color="var(--accent)" size={40} />} title="Prestasi Sekolah" subtitle="Fasilitas dan program unggulan untuk masa depan" />
-      <div className="glass flex-col-mobile" style={{ padding: '40px', borderRadius: '32px', display: 'flex', gap: '24px', alignItems: 'center', maxWidth: '800px', margin: '0 auto' }}>
-        <div style={{ background: 'var(--accent)', color: 'white', width: '80px', height: '80px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Award size={40} />
-        </div>
-        <div style={{ flex: 1 }}>
-          <h3 style={{ fontSize: '1.5rem', color: 'var(--primary-dark)', marginBottom: '8px' }}>Pendampingan Perguruan Tinggi & Bekerja</h3>
-          <p style={{ color: 'var(--text-dark)', lineHeight: 1.6 }}>
-            Siswa akan diberikan pendampingan untuk melanjutkan ke Perguruan Tinggi Negeri dan Swasta favorit serta disalurkan ke dunia usaha dan industri.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
 
   const KeunggulanSekolah = () => {
     const keunggulan = [
@@ -237,9 +87,9 @@ export default async function Home() {
 
     return (
       <section className="container" style={{ padding: '40px 24px' }}>
-        <div style={{ background: '#FCF9F2', border: '1px solid rgba(245, 158, 11, 0.2)', padding: '48px', borderRadius: '24px', maxWidth: '1100px', margin: '0 auto' }}>
-          <h3 style={{ textAlign: 'center', fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary)', marginBottom: '40px' }}>Keunggulan Sekolah</h3>
-          <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+        <div style={{ background: '#FCF9F2', border: '1px solid rgba(245, 158, 11, 0.2)', padding: 'clamp(24px, 4vw, 48px)', borderRadius: '24px', maxWidth: '1100px', margin: '0 auto' }}>
+          <h3 style={{ textAlign: 'center', fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '40px' }}>Keunggulan Sekolah</h3>
+          <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px' }}>
             {keunggulan.map((k, i) => (
               <div key={i} style={{ background: 'white', display: 'flex', alignItems: 'center', gap: '16px', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
                 <div style={{ color: 'var(--accent)', flexShrink: 0 }}>
@@ -255,14 +105,17 @@ export default async function Home() {
   };
 
   const Kontak = () => (
-    <section id="kontak" className="container" style={{ padding: '80px 24px' }}>
+    <section id="kontak" className="container" style={{ padding: '20px 24px 80px' }}>
       <div className="flex-col-mobile" style={{ display: 'flex', gap: '40px', alignItems: 'stretch' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: '1.5rem', color: 'var(--primary-dark)', marginBottom: '24px' }}>Hubungi Kami</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
             <div className="glass" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', borderRadius: '16px', flex: 1 }}>
               <div style={{ color: 'white', background: 'var(--primary)', padding: '12px', borderRadius: '12px' }}><MapPin size={24} /></div>
-              <div><strong style={{ display: 'block', color: 'var(--text-dark)' }}>Alamat</strong><span style={{ color: 'var(--text-light)' }}>Prambanan, Sleman, Yogyakarta</span></div>
+              <div>
+                <strong style={{ display: 'block', color: 'var(--text-dark)' }}>Alamat</strong>
+                <a href="https://www.google.com/maps/place/MA+Raden+Fatah/@-7.7744754,110.4760132,17z/data=!3m1!4b1!4m6!3m5!1s0x2e7a5a8efce330b5:0x5c9ed6914fdd0870!8m2!3d-7.7744807!4d110.4785881!16s%2Fg%2F1pzsr2nyl?entry=ttu&g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-light)', textDecoration: 'none', transition: 'color 0.3s' }} className="hover:text-primary">Prambanan, Sleman, Yogyakarta</a>
+              </div>
             </div>
             <div className="glass" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', borderRadius: '16px', flex: 1 }}>
               <div style={{ color: 'white', background: 'var(--primary)', padding: '12px', borderRadius: '12px' }}><Phone size={24} /></div>
@@ -307,11 +160,11 @@ export default async function Home() {
         <div style={{ position: 'absolute', top: '-300px', left: '-200px', width: '600px', height: '600px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
         <div style={{ position: 'absolute', bottom: '-300px', right: '-200px', width: '600px', height: '600px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}></div>
 
-        <h2 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '16px', position: 'relative', zIndex: 1, letterSpacing: '-0.02em' }}>Siap Bergabung dengan MA Raden Fatah?</h2>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '16px', position: 'relative', zIndex: 1, letterSpacing: '-0.02em' }}>Siap Bergabung dengan MA Raden Fatah?</h2>
         <p style={{ fontSize: '1.25rem', opacity: 0.9, maxWidth: '700px', margin: '0 auto 40px', position: 'relative', zIndex: 1 }}>
           Daftarkan diri Anda sekarang dan jadilah bagian dari generasi unggul kami.
         </p>
-        <div style={{ display: 'flex', gap: '32px', justifyContent: 'center', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+        <div className="flex-col-mobile" style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
           <a href="https://nuist.id/ppdb/MA%20Raden%20Fatah" target="_blank" rel="noopener noreferrer" className="btn" style={{ background: 'white', color: 'var(--primary)', padding: '16px 48px', fontSize: '1.125rem', textDecoration: 'none', borderRadius: '100px', fontWeight: 'bold' }}>
             Daftar PPDB Sekarang
           </a>
@@ -323,18 +176,202 @@ export default async function Home() {
     </section>
   );
 
+  const BeritaTerbaru = () => {
+    // Dummy posts if no posts found
+    const dummyPosts = [
+      {
+        id: '1', slug: 'dummy-1', title: 'Indahnya alam test demo',
+        content: 'Paragraf 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolor...',
+        category: 'Sosial', authorName: 'ADMINISTRATOR',
+        createdAt: new Date('2026-07-10'), image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800'
+      },
+      {
+        id: '2', slug: 'dummy-2', title: 'Test Berita Demo',
+        content: 'Paragraf 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolor...',
+        category: 'Olah Raga', authorName: 'ADMINISTRATOR',
+        createdAt: new Date('2026-07-10'), image: 'https://images.unsplash.com/photo-1540324155974-7523202daa3f?q=80&w=800'
+      },
+      {
+        id: '3', slug: 'dummy-3', title: 'Kegiatan Alam Dalam Rangka Memperingati Hari Pramuka',
+        content: 'Kegiatan Alam Dalam Rangka Memperingati Hari PramukaKegiatan Alam Dalam Rangka Memperingati Hari PramukaKegiatan Alam D...',
+        category: 'Sosial', authorName: 'SISTEM',
+        createdAt: new Date('2026-04-28'), image: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=800'
+      }
+    ];
+
+    const displayPosts = latestPosts.length >= 3 ? latestPosts.slice(0, 3) : (latestPosts.length > 0 ? latestPosts : dummyPosts);
+
+    return (
+      <section style={{ padding: '100px 24px', background: 'white' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '1rem', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <span style={{ color: 'var(--primary)' }}>✦</span> KABAR SEKOLAH
+            </div>
+            <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-dark)', margin: 0, lineHeight: 1.2 }}>
+              Kabar dan <span style={{ color: 'var(--primary)' }}>Berita Terbaru</span> dari<br />Sekolah.
+            </h2>
+          </div>
+
+          <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '48px' }}>
+            {displayPosts.map((post: any) => (
+              <div key={post.id} style={{ display: 'flex', flexDirection: 'column', background: 'white', borderRadius: '16px', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', height: '220px', borderRadius: '16px', overflow: 'hidden' }}>
+                  <img src={post.image || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800'} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'var(--primary)', color: 'white', padding: '6px 16px', borderRadius: '100px', fontSize: '1rem', fontWeight: 700, zIndex: 10 }}>
+                    {post.category || 'Berita'}
+                  </div>
+                </div>
+                <div style={{ padding: '24px 0', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', color: 'var(--text-light)', fontSize: '1rem', fontWeight: 700, textTransform: 'uppercase', marginBottom: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Calendar size={14} color="var(--primary)" />
+                      {new Date(post.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <User size={14} color="var(--primary)" />
+                      {post.authorName || 'ADMINISTRATOR'}
+                    </div>
+                  </div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-dark)', marginBottom: '16px', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {post.title}
+                  </h3>
+                  <p style={{ color: 'var(--text-light)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '24px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {post.content}
+                  </p>
+                  <div style={{ marginTop: 'auto' }}>
+                    <Link href={`/berita/${post.slug || post.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--primary)', fontWeight: 700, fontSize: '1rem', textDecoration: 'none' }} className="hover-link">
+                      Baca Selengkapnya <ArrowRight size={16} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <Link href="/berita" className="btn btn-primary" style={{ padding: '12px 32px', fontSize: '0.9rem', borderRadius: '100px', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              Semua Berita <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  const PrestasiTerbaru = () => {
+    // Dummy prestasi if DB is empty
+    const dummyPrestasi = [
+      {
+        id: "1",
+        title: "Juara 1 Lomba Cerdas Cermat Nasional",
+        content: "Tim siswa kami berhasil meraih juara 1 dalam lomba cerdas cermat tingkat nasional yang diadakan oleh Kementerian Pendidikan.",
+        image: "https://images.unsplash.com/photo-1523287562758-66c7fc58967f?q=80&w=800",
+        createdAt: new Date("2026-06-30"),
+        tingkat: "NASIONAL",
+        subCategory: "Siswa",
+        color: "bg-blue-500"
+      },
+      {
+        id: "2",
+        title: "Penghargaan Guru Inspiratif 2026",
+        content: "Bapak Ahmad meraih penghargaan guru inspiratif tingkat provinsi atas dedikasinya dalam mengembangkan metode pembelajaran interaktif.",
+        image: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800",
+        createdAt: new Date("2026-05-15"),
+        tingkat: "PROVINSI",
+        subCategory: "Guru & Staf",
+        color: "bg-emerald-500"
+      },
+      {
+        id: "3",
+        title: "Sekolah Adiwiyata Tingkat Kabupaten",
+        content: "MA Raden Fatah resmi dinobatkan sebagai Sekolah Adiwiyata atas komitmen warga sekolah dalam menjaga kelestarian lingkungan.",
+        image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800",
+        createdAt: new Date("2026-03-20"),
+        tingkat: "KABUPATEN",
+        subCategory: "Institusi",
+        color: "bg-orange-500"
+      }
+    ];
+
+    const displayPrestasi = latestPrestasi.length >= 3 ? latestPrestasi.slice(0, 3) : (latestPrestasi.length > 0 ? latestPrestasi : dummyPrestasi);
+
+    return (
+      <section style={{ padding: '0 24px 100px', background: 'white' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '1rem', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '16px' }}>
+              <span style={{ color: 'var(--accent)' }}>✦</span> PRESTASI SEKOLAH
+            </div>
+            <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-dark)', margin: 0, lineHeight: 1.2 }}>
+              Prestasi <span style={{ color: 'var(--primary)' }}>Membanggakan</span> dari<br />Siswa & Guru Kami.
+            </h2>
+          </div>
+
+          <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '48px' }}>
+            {displayPrestasi.map((item: any) => (
+              <a href={`/prestasi/${item.slug || item.id}`} key={item.id} className="group" style={{ 
+                display: 'flex', flexDirection: 'column', background: 'white', borderRadius: '16px', overflow: 'hidden', 
+                border: '1px solid var(--glass-border)', textDecoration: 'none', transition: 'all 0.4s ease',
+                boxShadow: 'var(--glass-shadow)'
+              }}>
+                <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'var(--accent)', color: 'white', padding: '4px 12px', borderRadius: '100px', fontSize: '0.875rem', fontWeight: 700, zIndex: 10, letterSpacing: '0.05em' }}>
+                    {item.tingkat || "LOKAL"}
+                  </div>
+                  <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.9)', color: 'var(--text-dark)', padding: '4px 12px', borderRadius: '100px', fontSize: '0.875rem', fontWeight: 700, zIndex: 10, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Star size={12} color="var(--accent)" fill="var(--accent)" />
+                    {item.subCategory || "Siswa"}
+                  </div>
+                  
+                  <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} className="group-hover:scale-110" />
+                  
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)', opacity: 0.8 }}></div>
+                  
+                  <div style={{ position: 'absolute', bottom: '20px', left: '20px', right: '20px' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white', lineHeight: 1.4, margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {item.title}
+                    </h3>
+                  </div>
+                </div>
+
+                <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <p style={{ color: 'var(--text-light)', fontSize: '1rem', lineHeight: 1.6, marginBottom: '20px', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', flex: 1 }}>
+                    {item.content}
+                  </p>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid var(--glass-border)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-light)', fontSize: '0.875rem', fontWeight: 600 }}>
+                      <Calendar size={14} />
+                      {new Date(item.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </div>
+                    <div style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '1rem', fontWeight: 700 }} className="group-hover:text-var(--accent) transition-colors">
+                      Detail <ArrowRight size={16} />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center' }}>
+            <Link href="/prestasi" className="btn btn-outline-primary" style={{ padding: '12px 32px', fontSize: '1rem', borderRadius: '100px', display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              Lihat Semua Prestasi <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-color)', overflowX: 'hidden' }}>
       <Navbar />
       <Hero />
       <KepalaSekolah />
-      <Profile />
-      <Jurusan />
-      <Fasilitas />
-      <ProgramEkstra />
-      <Prestasi />
-      <VisiMisi />
-      <KeunggulanSekolah />
+      <BeritaTerbaru />
+      <PrestasiTerbaru />
+      <TestimoniCarousel />
       <Kontak />
       <CTA />
       <Footer />

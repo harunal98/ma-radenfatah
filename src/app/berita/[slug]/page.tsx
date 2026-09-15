@@ -57,122 +57,103 @@ export default async function BeritaDetailPage(props: { params: Promise<{ slug: 
     <div style={{ background: 'var(--bg-color)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
       
-      <main style={{ flex: 1, paddingBottom: '0', paddingTop: '100px' }}>
-        {/* Breadcrumb */}
-        <div className="container" style={{ padding: '0 24px 24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.875rem' }}>
-            <Link href="/" style={{ color: 'var(--text-light)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+      <main style={{ flex: 1, paddingBottom: '0', paddingTop: '120px' }}>
+        <div className="container" style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px 60px' }}>
+          
+          {/* Breadcrumb */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.9rem', marginBottom: '24px', flexWrap: 'wrap' }}>
+            <Link href="/" style={{ color: 'var(--text-light)', textDecoration: 'none', display: 'flex', alignItems: 'center' }} className="hover:text-primary">
               <Home size={16} />
             </Link>
             <ChevronRight size={16} />
-            <span>Informasi</span>
+            <Link href="/berita" style={{ color: 'var(--text-light)', textDecoration: 'none' }} className="hover:text-primary">Berita & Artikel</Link>
             <ChevronRight size={16} />
-            <Link href="/berita" style={{ color: 'var(--text-light)', textDecoration: 'none' }}>Berita</Link>
-            <ChevronRight size={16} />
-            <span style={{ color: 'var(--primary)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>
-              {post.title}
+            <span style={{ color: 'var(--primary)', fontWeight: 600 }}>
+              {post.category || 'Berita'}
             </span>
           </div>
-        </div>
 
-        {/* Banner Area */}
-        <div style={{ position: 'relative', width: '100%', height: '55vh', minHeight: '400px', maxHeight: '600px', backgroundColor: '#1E293B' }}>
-          <img src={post.image || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200'} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%)' }}></div>
-          
-          <div className="container" style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', padding: '0 24px 60px', width: '100%' }}>
-            <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-              <Link href="/berita" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'rgba(255,255,255,0.8)', textDecoration: 'none', marginBottom: '24px', fontSize: '0.9rem', fontWeight: 600 }}>
-                <ArrowLeft size={16} /> Kembali ke Berita
-              </Link>
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                <span style={{ background: 'var(--primary)', color: 'white', padding: '4px 12px', borderRadius: '100px', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                  {post.category}
-                </span>
+          {/* Title */}
+          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: 'var(--primary-dark)', lineHeight: 1.2, marginBottom: '24px', letterSpacing: '-0.02em' }}>
+            {post.title}
+          </h1>
+
+          {/* Meta Info */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', paddingBottom: '24px', borderBottom: '1px solid var(--glass-border)', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.95rem' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}>
+                <User size={16} />
               </div>
-              
-              <h1 style={{ fontSize: '3rem', fontWeight: 800, color: 'white', lineHeight: 1.2, marginBottom: '24px' }}>
-                {post.title}
-              </h1>
-              
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', color: 'rgba(255,255,255,0.8)', fontSize: '0.95rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <User size={16} /> {post.authorName || 'Admin'}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Calendar size={16} /> {new Date(post.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </div>
-              </div>
+              <span style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{post.authorName || 'Admin'}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.95rem' }}>
+              <Calendar size={16} style={{ color: 'var(--primary)' }} />
+              {new Date(post.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
             </div>
           </div>
-        </div>
 
-        {/* Content Area */}
-        <div className="container" style={{ padding: '60px 24px 80px' }}>
-          <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap', maxWidth: '1000px', margin: '0 auto' }}>
-            
-            {/* Social Share (Desktop Sidebar) */}
-            <div style={{ flex: '0 0 50px', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center', position: 'sticky', top: '120px', height: 'fit-content' }} className="hide-on-mobile">
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '1px' }}>Share</span>
-              <button style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'white', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1877F2', cursor: 'pointer', transition: 'all 0.2s ease' }} className="hover:bg-gray-50">
-                <Share2 size={18} />
-              </button>
-              <button style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'white', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#25D366', cursor: 'pointer', transition: 'all 0.2s ease' }} className="hover:bg-gray-50">
-                <MessageCircle size={18} />
-              </button>
-              <button style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'white', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-light)', cursor: 'pointer', transition: 'all 0.2s ease' }} className="hover:bg-gray-50">
-                <LinkIcon size={18} />
-              </button>
-            </div>
+          {/* Featured Image */}
+          <div style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', marginBottom: '40px', boxShadow: 'var(--glass-shadow)', position: 'relative' }}>
+            <img src={post.image || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1200'} alt={post.title} style={{ width: '100%', height: 'auto', maxHeight: '500px', objectFit: 'cover' }} />
+          </div>
 
-            {/* Main Text */}
-            <article style={{ flex: '1 1 0', minWidth: 0 }}>
-              <div 
-                style={{ 
-                  fontSize: '1.2rem', 
-                  lineHeight: 1.8, 
-                  color: '#334155',
-                  whiteSpace: 'pre-wrap'
-                }}
-              >
-                {post.content}
-              </div>
+          {/* Content & Share */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+            <article style={{ fontSize: '1.15rem', lineHeight: 1.8, color: '#334155', whiteSpace: 'pre-wrap' }}>
+              {post.content}
             </article>
 
+            {/* Share Section */}
+            <div style={{ padding: '24px', background: 'rgba(16,185,129,0.05)', borderRadius: '16px', border: '1px solid var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+              <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--primary-dark)' }}>Bagikan Artikel Ini:</span>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'white', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1877F2', cursor: 'pointer' }} className="hover-lift">
+                  <Share2 size={18} />
+                </button>
+                <button style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'white', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#25D366', cursor: 'pointer' }} className="hover-lift">
+                  <MessageCircle size={18} />
+                </button>
+                <button style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'white', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-light)', cursor: 'pointer' }} className="hover-lift">
+                  <LinkIcon size={18} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Related News */}
-        <div style={{ background: 'white', padding: '80px 0', borderTop: '1px solid #E2E8F0' }}>
-          <div className="container" style={{ padding: '0 24px', maxWidth: '1000px' }}>
-            <h3 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '32px', color: 'var(--primary-dark)' }}>Berita Terkait</h3>
+        <div style={{ background: 'var(--bg-color)', padding: '60px 0', borderTop: '1px solid var(--glass-border)' }}>
+          <div className="container" style={{ padding: '0 24px', maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+              <h3 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary-dark)', margin: 0 }}>Berita Terkait</h3>
+              <Link href="/berita" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }} className="hover:text-accent hover-lift">
+                Lihat Semua <ChevronRight size={18} />
+              </Link>
+            </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
               {related.map((item: any) => (
                 <Link key={item.id} href={`/berita/${item.slug}`} style={{ textDecoration: 'none' }}>
-                  <div className="glass" style={{ borderRadius: '16px', overflow: 'hidden', height: '100%', transition: 'transform 0.3s ease', border: '1px solid #E2E8F0' }}>
-                    <div style={{ height: '180px', width: '100%' }}>
-                      <img src={item.image || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400'} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </div>
-                    <div style={{ padding: '20px', background: 'white' }}>
-                      <div style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, marginBottom: '8px' }}>
-                        {item.category || 'Berita'}
+                  <article className="group hover-lift" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', transition: 'transform 0.4s ease', cursor: 'pointer', borderRadius: '20px', background: 'white', border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)', height: '100%' }}>
+                    <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
+                      <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'var(--primary)', color: 'white', padding: '4px 16px', borderRadius: '100px', fontSize: '0.85rem', fontWeight: 700, zIndex: 10 }}>
+                        {item.category || 'BERITA'}
                       </div>
-                      <h4 style={{ fontSize: '1.1rem', color: 'var(--text-dark)', fontWeight: 700, lineHeight: 1.4, marginBottom: '12px' }}>
-                        {item.title}
-                      </h4>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-light)', fontSize: '0.8rem' }}>
-                        <Calendar size={12} /> {new Date(item.createdAt).toLocaleDateString('id-ID')}
+                      <img src={item.image || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=400'} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} className="group-hover:scale-110" />
+                    </div>
+                    <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      <h4 style={{ fontSize: '1.15rem', color: 'var(--text-dark)', marginBottom: '12px', lineHeight: 1.4, fontWeight: 700 }}>{item.title}</h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-light)', fontSize: '0.85rem', marginTop: 'auto', fontWeight: 600 }}>
+                        <Calendar size={14} />
+                        {new Date(item.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
                       </div>
                     </div>
-                  </div>
+                  </article>
                 </Link>
               ))}
             </div>
           </div>
         </div>
-        
       </main>
 
       <Footer />
